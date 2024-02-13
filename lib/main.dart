@@ -5,61 +5,87 @@ import 'const_and_function/widgets.dart';
 
 
 late List<data> contenido = [];
+bool startAnimation = false;
+double screenHeight = 0;
+double screenWidth = 0;
 
 void main() {
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'My App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      theme: ThemeData().copyWith(
+        appBarTheme:const AppBarTheme(
+          backgroundColor: Color(0xffa0bd95),
+        ),
+        scaffoldBackgroundColor: const Color(0xefffffff),
       ),
       home: const MyApp()));
 }
+
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
   
   @override
   State<MyApp> createState() => _MyAppState();
-  
+
 }
 
-
-
 class _MyAppState extends State<MyApp> {
+  Widget remove (index){
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: GestureDetector(
+        child: const Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.delete_forever, size: 15),
+            SizedBox(width: 5),
+            Text('Eliminar'),
+        ],
+        ),
+        onTap: (){
+          rem_item(index);
+          setState(() {
 
-  
+          });
+        },
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
-            title: const Text("Saving's List"),
+            title: GestureDetector(
+                child: const Text("Bajo el Colchón"),
+            onTap: () {
+                      setState(() {
+                        startAnimation = !startAnimation;
+                      });
+            },
+            ),
           actions: [
             GestureDetector(
-                child: Text('agrear'),
+                child: const Icon(Icons.add),
             onTap: () {
+              addItem(context).then((_) => {
                   setState(() {
-                    add_item("Carro", 10000, 5000, '01-12-2024');
-                  });
+
+                })
+              });
+
             }
               ),
             const SizedBox(width: 10),
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: GestureDetector(
-                  child: Text('eliminar'),
-              onTap: (){
-                setState(() {
-                  rem_item((contenido.length)-1);
-                });
-              },
-              ),
-            ),
           ],
         ),
         body: Container(
-          height: double.maxFinite,
-          width: double.maxFinite,
+          height: screenHeight,
+          width: screenWidth,
           decoration: const BoxDecoration(
             color: Color.fromARGB(20, 20, 30, 10),
           ),
@@ -67,6 +93,8 @@ class _MyAppState extends State<MyApp> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListView.builder(
+                primary: false,
+                shrinkWrap: true,
                 itemCount: contenido.length,
                 itemBuilder: (BuildContext context, int index){
                   var _color = contenido[index].color;
@@ -75,28 +103,13 @@ class _MyAppState extends State<MyApp> {
                   var _resta = contenido[index].resta;
                   var _fecha = contenido[index].date.toString();
                   var _actual = contenido[index].val_actual;
-
-                 return Padding(
-                   padding: const EdgeInsets.all(4.0),
-                   child: AnimatedContainer(
-                       width: double.maxFinite,
-                       height: 155,
-                       duration: const Duration(seconds: 1),
-                       curve: Curves.slowMiddle,
-                       decoration: BoxDecoration (
-                           borderRadius: BorderRadius.circular(15.0),
-                           border: Border.all(color: Colors.black87,),
-                           color: const Color(0x844E4F4B)
-                       ),
-                       child: cuadro(_name, _color, _monto, _actual, _fecha, _resta)),
-                 );
+                 return cuadro(_name, _color, _monto, _actual, _fecha, _resta, index, remove(index));
                 },
             ),
           ),
         ));
   }
 }
-
 
 
 
