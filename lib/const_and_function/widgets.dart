@@ -20,55 +20,59 @@ Widget cuadro(String name, color, int monto, int ahorro,String fecha, int resta,
   var _value = (valor/100);
   return Padding(
     padding: const EdgeInsets.all(8.0),
-    child: Container(
-      width: screenWidth,
-      height: 175,
-      decoration: BoxDecoration (
-          borderRadius: BorderRadius.circular(15.0),
-          border: Border.all(color: Colors.black87,),
-          color: const Color(0x844E4F4B)
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              SizedBox(
-                width: 300,
-                height: 150,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    data_cuadro(name, monto.toString(), resta.toString(), fecha, ahorro.toString(), index),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  height: 130,
-                  width: 75,
-                  child: LiquidLinearProgressIndicator(
-                    value: _value, // Defaults to 0.5.
-                    valueColor: AlwaysStoppedAnimation( color ), // Defaults to the current Theme's accentColor.
-                    backgroundColor: Colors
-                        .white38, // Defaults to the current Theme's backgroundColor.
-                    borderColor: Colors.black87,
-                    borderWidth: 1.0,
-                    borderRadius: 10.0,
-                    direction: Axis
-                        .vertical,
-                    center: Text('${valor}%', style: const TextStyle(fontSize: 24, color: Colors.yellow)),// The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.horizontal.
+    child: AnimatedOpacity(
+      duration: const Duration(milliseconds: 600),
+      opacity: startAnimation ? 1.0 : 0.1,
+      child: Container(
+        width: screenWidth,
+        height: 175,
+        decoration: BoxDecoration (
+            borderRadius: BorderRadius.circular(15.0),
+            border: Border.all(color: Colors.black87,),
+            color: const Color(0x844E4F4B)
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                SizedBox(
+                  width: 300,
+                  height: 150,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      data_cuadro(name, monto.toString(), resta.toString(), fecha, ahorro.toString(), index),
+                    ],
                   ),
                 ),
-              ),
-            ],
-          ),
-          remove
-        ],
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                    height: 130,
+                    width: 75,
+                    child: LiquidLinearProgressIndicator(
+                      value: _value, // Defaults to 0.5.
+                      valueColor: AlwaysStoppedAnimation( color ), // Defaults to the current Theme's accentColor.
+                      backgroundColor: Colors
+                          .white38, // Defaults to the current Theme's backgroundColor.
+                      borderColor: Colors.black87,
+                      borderWidth: 1.0,
+                      borderRadius: 10.0,
+                      direction: Axis
+                          .vertical,
+                      center: Text('${valor}%', style: const TextStyle(fontSize: 24, color: Colors.yellow)),// The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.horizontal.
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            remove
+          ],
+        ),
       ),
     ),
   );

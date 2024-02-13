@@ -1,11 +1,12 @@
+import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:saving_control/models/data_model.dart';
 import 'const_and_function/functions.dart';
 import 'const_and_function/widgets.dart';
 
 
-late List<data> contenido = [];
-bool startAnimation = false;
+late List<DataList> ListaData = [];
+bool startAnimation = true;
 double screenHeight = 0;
 double screenWidth = 0;
 
@@ -45,11 +46,13 @@ class _MyAppState extends State<MyApp> {
             Text('Eliminar'),
         ],
         ),
-        onTap: (){
+        onTap: ()async {
+          startAnimation=false;
+          setState(() {});
+          await Future.delayed(const Duration(milliseconds: 600));
           rem_item(index);
-          setState(() {
-
-          });
+          startAnimation = true;
+          setState(() {});
         },
       ),
     );
@@ -95,15 +98,12 @@ class _MyAppState extends State<MyApp> {
             child: ListView.builder(
                 primary: false,
                 shrinkWrap: true,
-                itemCount: contenido.length,
+                itemCount: ListaData.length,
                 itemBuilder: (BuildContext context, int index){
-                  var _color = contenido[index].color;
-                  var _name = contenido[index].name.toString();
-                  var _monto = contenido[index].monto;
-                  var _resta = contenido[index].resta;
-                  var _fecha = contenido[index].date.toString();
-                  var _actual = contenido[index].val_actual;
-                 return cuadro(_name, _color, _monto, _actual, _fecha, _resta, index, remove(index));
+                  DataList listData = ListaData[index];
+                 return DelayedDisplay(
+                     delay: const Duration(milliseconds: 450),
+                     child: cuadro(listData.name.toString(), listData.color, listData.monto, listData.val_actual, listData.date.toString(), listData.resta, index, remove(index)));
                 },
             ),
           ),

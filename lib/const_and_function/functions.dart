@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:saving_control/const_and_function/widgets.dart';
-import '../main.dart';
+import '../main.dart' show ListaData;
 import '../models/data_model.dart';
 
 
@@ -19,7 +19,7 @@ add_item (name, int monto, int ahora, fecha, context) {
 }
 
 rem_item (index) {
-  contenido.removeAt(index);
+  ListaData.removeAt(index);
 }
 
 Future<void> addItem(context) async {
@@ -55,7 +55,7 @@ Future<void> addItem(context) async {
                               var mensaje = 'El monto debe ser mayor a 0';
                               alertError(context, mensaje);
                           }else{
-                              contenido.add(data(nameControler.text, int.parse(montoControler.text), fechaControler.text, 0, 0, color_fondo()));
+                              ListaData.add(DataList(nameControler.text, int.parse(montoControler.text), fechaControler.text, 0, 0, color_fondo()));
                               nameControler.clear();
                               fechaControler.clear();
                               montoControler.clear();
@@ -133,3 +133,4 @@ Future<void> alertError(BuildContext context, texto) async {
     ),
   );
 }
+
