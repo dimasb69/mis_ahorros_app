@@ -33,6 +33,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    csvRead().then((value) => setState(() {}));
+    super.initState();
+
+  }
+
   Widget remove (index){
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
@@ -52,6 +60,7 @@ class _MyAppState extends State<MyApp> {
           await Future.delayed(const Duration(milliseconds: 600));
           rem_item(index);
           startAnimation = true;
+          listToCSV(ListaData);
           setState(() {});
         },
       ),

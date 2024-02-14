@@ -6,7 +6,7 @@ class DataList{
   late String? date;
   late int val_actual;
   late int resta;
-  late Color? color;
+  late Color color;
   DataList(this.name, this.monto, this.date, this.val_actual, this.resta, this.color){
     name=name;
     monto=monto;

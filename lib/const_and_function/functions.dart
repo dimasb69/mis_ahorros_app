@@ -1,21 +1,21 @@
+import 'dart:convert';
 import 'dart:math';
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:saving_control/const_and_function/widgets.dart';
 import '../main.dart' show ListaData;
 import '../models/data_model.dart';
+import 'dart:io';
 
 
+const csvName = "data.csv";
 
-
-
+late String csv;
 final random = Random();
 Color color_fondo (){
   Color _color_cuadro = Color.fromARGB(random.nextInt(254), random.nextInt(254), random.nextInt(254), 100);
   return _color_cuadro;
-}
-
-add_item (name, int monto, int ahora, fecha, context) {
-
 }
 
 rem_item (index) {
@@ -47,15 +47,13 @@ Future<void> addItem(context) async {
                     Expanded(
                       child: InkWell(
                         onTap: () {
-
-                          bool amount = false;
-
                           if (fechaControler.text != "" && nameControler.text != '' && montoControler.text != '' ) {
                             if (int.parse(montoControler.text) <= 0){
                               var mensaje = 'El monto debe ser mayor a 0';
                               alertError(context, mensaje);
                           }else{
                               ListaData.add(DataList(nameControler.text, int.parse(montoControler.text), fechaControler.text, 0, 0, color_fondo()));
+                              listToCSV(ListaData);
                               nameControler.clear();
                               fechaControler.clear();
                               montoControler.clear();
@@ -132,5 +130,67 @@ Future<void> alertError(BuildContext context, texto) async {
       ],
     ),
   );
+}
+
+
+Future<void> listToCSV (List<DataList> lista)async {
+  List<List<dynamic>> csvData = [
+    <String>['name', 'monto', 'date', 'val-.actual', 'resta', 'color'],
+    ...lista.map((item) => [item.name, item.monto, item.date, item.val_actual, item.resta, item.color.toString()])
+  ];
+  csv = const ListToCsvConverter().convert(csvData);
+  print (csv);
+
+  final String dir = (await getApplicationDocumentsDirectory()).path;
+  final String path = '$dir/$csvName';
+  final File file = File(path);
+
+  var dataSaved = await file.writeAsString(csv);
+  print(dataSaved);
+}
+
+Future<void> csvRead()async {
+  final String dir = (await getApplicationDocumentsDirectory()).path;
+  final String path = '$dir/$csvName';
+  final input = File(path).openRead();
+  final fields = await input.transform(utf8.decoder).transform(CsvToListConverter()).toList();
+  //print('primer valor: ${fields.length}');
+for (int i=0; i < fields.length; i++){
+  if (i != 0){
+    final String name = fields[i][0].toString();
+    final int monto = int.parse(fields[i][1].toString());
+    final String date = fields[i][2].toString();
+    final int val_atc = int.parse(fields[i][3].toString());
+    final int resta = int.parse(fields[i][4].toString());
+    final color = fields[i][5].toString();
+    var exaName = "";
+    for (int c = 0; c < color.length; c++ ){
+      if (c == 6){
+        exaName = exaName+color[c];
+      }else if (c == 7){
+        exaName = exaName+color[c];
+      }else if (c == 8){
+        exaName = exaName+color[c];
+      }else if (c == 9){
+        exaName = exaName+color[c];
+      }else if (c == 10){
+        exaName = exaName+color[c];
+      }else if (c == 11){
+        exaName = exaName+color[c];
+      }else if (c == 12){
+        exaName = exaName+color[c];
+      }else if (c == 13){
+        exaName = exaName+color[c];
+      }else if (c == 14){
+        exaName = exaName+color[c];
+      }else if (c == 15){
+        exaName = exaName+color[c];
+      }
+    }
+    final idColor = int.parse(exaName);
+    ListaData.add(DataList(name, monto, date, val_atc, resta, Color(idColor)));
+    await Future.delayed(const Duration(milliseconds: 300));
+  }
+}
 }
 
