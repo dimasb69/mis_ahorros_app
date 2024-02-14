@@ -12,7 +12,7 @@ double screenWidth = 0;
 void main() {
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Mi Ahorros',
+      title: 'Mis Ahorros',
       theme: ThemeData().copyWith(
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xffa0bd95),
@@ -47,13 +47,16 @@ class _MyAppState extends State<MyApp> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                    Icons.add_home_work_outlined,
+                  Icons.add_home_work_outlined,
                   size: 35,
                 ),
                 SizedBox(width: 4),
                 Text(
                   "MIS AHORROS",
-                  style: TextStyle(fontSize: 35, color: Colors.blueGrey,fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 35,
+                      color: Colors.blueGrey,
+                      fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -119,13 +122,19 @@ class _MyAppState extends State<MyApp> {
           ],
         ),
         onTap: () async {
-          startAnimation = false;
-          setState(() {});
-          await Future.delayed(const Duration(milliseconds: 750));
-          rem_item(index);
-          startAnimation = true;
-          listToCSV(ListaData);
-          setState(() {});
+          eliminarValue(context).then((value)  async{
+                print(value.toString());
+                if (value)
+                  {
+                    startAnimation = false;
+                    setState(() {});
+                    await timporEspera(600);
+                    rem_item(index);
+                    startAnimation = true;
+                    listToCSV(ListaData);
+                    setState(() {});
+                  }
+              });
         },
       ),
     );

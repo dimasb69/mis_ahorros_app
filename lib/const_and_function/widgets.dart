@@ -33,9 +33,9 @@ Widget cuadro(String name, color, int monto, int ahorro,String fecha, int resta,
       duration: const Duration(milliseconds: 750),
       opacity: startAnimation ? 1.0 : 0.1,
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 600),
+        duration: const Duration(milliseconds: 600),
         width: screenWidth,
-        height: 225,
+        height: 230,
         decoration: BoxDecoration (
             borderRadius: BorderRadius.circular(8.0),
             border: Border.all(color: Color.fromARGB(211, 92, 103, 92)),
@@ -44,17 +44,16 @@ Widget cuadro(String name, color, int monto, int ahorro,String fecha, int resta,
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 6),
+              padding: const EdgeInsets.only(left: 5),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   SizedBox(
-                    width: 300,
+                    width: 320,
                     height: 195,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         data_cuadro(name, monto.toString(), calculoR.toString(), fecha, ahorro.toString(), index, difference.inDays),
                       ],
@@ -203,7 +202,7 @@ Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
                 children: [
                   Text("Montos necesarios para completar",
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),)
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12),)
                 ],
               ),
               const SizedBox(height: 8),
@@ -215,12 +214,12 @@ Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
                       Text(
                         "Diario: ",
                         textAlign: TextAlign.start,
-                        style: TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 10),
+                        style: TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 9),
                       ),
                       Text(
                         '$montDias USD',
                         textAlign: TextAlign.start,
-                        style:  TextStyle(color: ct, fontSize: 10),
+                        style:  TextStyle(color: ct, fontSize: 9),
                       ),
                     ],
                   ),
@@ -229,12 +228,12 @@ Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
                       Text(
                         "Semanal: ",
                         textAlign: TextAlign.start,
-                        style: TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 10),
+                        style: TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 9),
                       ),
                       Text(
                         "${num.parse((montDias*7).toStringAsFixed(2))} USD",
                         textAlign: TextAlign.start,
-                        style:  TextStyle(color: ct, fontSize: 10),
+                        style:  TextStyle(color: ct, fontSize: 9),
                       ),
                     ],
                   ),
@@ -243,12 +242,12 @@ Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
                       Text(
                         "Mensual: ",
                         textAlign: TextAlign.start,
-                        style: TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 10),
+                        style: TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 9),
                       ),
                       Text(
                         "${num.parse((montDias*30).toStringAsFixed(2))} USD",
                         textAlign: TextAlign.start,
-                        style:  TextStyle(color: ct, fontSize: 10),
+                        style:  TextStyle(color: ct, fontSize: 9),
                       ),
                     ],
                   ),

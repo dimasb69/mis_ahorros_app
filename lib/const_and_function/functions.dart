@@ -36,13 +36,13 @@ Future<void> addItem(context) async {
         content: SingleChildScrollView(
           child: Container(
             width: 150,
-            height: 300,
+            height: 270,
             child: Column(
               children: [
                 fechaW(context),
                 nameW(),
                 montoW(),
-                const SizedBox(height: 18),
+                const SizedBox(height: 15),
                 Row(
                   children: [
                     Expanded(
@@ -76,7 +76,7 @@ Future<void> addItem(context) async {
                           }
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(8),
                           decoration: const BoxDecoration(color: Colors.green),
                           child: const Row(
                             children: [
@@ -84,7 +84,7 @@ Future<void> addItem(context) async {
                                   child: Text(
                                 "Aceptar",
                                 style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
+                                    fontSize: 12, color: Colors.white),
                                 textAlign: TextAlign.center,
                               )),
                             ],
@@ -96,10 +96,13 @@ Future<void> addItem(context) async {
                     Expanded(
                       child: InkWell(
                         onTap: () {
+                          nameControler.clear();
+                          fechaControler.clear();
+                          montoControler.clear();
                           Navigator.pop(context);
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(8),
                           decoration: const BoxDecoration(color: Colors.red),
                           child: const Row(
                             children: [
@@ -107,7 +110,7 @@ Future<void> addItem(context) async {
                                   child: Text(
                                 "Cancelar",
                                 style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
+                                    fontSize: 12, color: Colors.white),
                                 textAlign: TextAlign.center,
                               )),
                             ],
@@ -211,7 +214,7 @@ Future<void> csvRead() async {
       final idColor = int.parse(exaName);
       ListaData.add(
           DataList(name, monto, date, val_atc, resta, Color(idColor)));
-      await Future.delayed(const Duration(milliseconds: 300));
+      await timporEspera(250);
     }
   }
 }
@@ -238,13 +241,13 @@ Future<void> editItem(context, index) async {
         content: SingleChildScrollView(
           child: Container(
             width: 150,
-            height: 300,
+            height: 270,
             child: Column(
               children: [
                 fechaW(context),
                 nameW(),
                 montoW(),
-                const SizedBox(height: 18),
+                const SizedBox(height: 15),
                 Row(
                   children: [
                     Expanded(
@@ -261,8 +264,7 @@ Future<void> editItem(context, index) async {
                               ListaData[index].date = fechaControler.text;
                               ListaData[index].monto =
                                   int.parse(montoControler.text);
-                              await Future.delayed(
-                                  const Duration(milliseconds: 500));
+                              await timporEspera(500);
                               listToCSV(ListaData);
                               nameControler.clear();
                               fechaControler.clear();
@@ -277,7 +279,7 @@ Future<void> editItem(context, index) async {
                           }
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(8),
                           decoration: const BoxDecoration(color: Colors.green),
                           child: const Row(
                             children: [
@@ -285,7 +287,7 @@ Future<void> editItem(context, index) async {
                                   child: Text(
                                 "Aceptar",
                                 style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
+                                    fontSize: 12, color: Colors.white),
                                 textAlign: TextAlign.center,
                               )),
                             ],
@@ -297,10 +299,13 @@ Future<void> editItem(context, index) async {
                     Expanded(
                       child: InkWell(
                         onTap: () {
+                          nameControler.clear();
+                          fechaControler.clear();
+                          montoControler.clear();
                           Navigator.pop(context);
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(8),
                           decoration: const BoxDecoration(color: Colors.red),
                           child: const Row(
                             children: [
@@ -308,7 +313,7 @@ Future<void> editItem(context, index) async {
                                   child: Text(
                                 "Cancelar",
                                 style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
+                                    fontSize: 12, color: Colors.white),
                                 textAlign: TextAlign.center,
                               )),
                             ],
@@ -339,12 +344,12 @@ Future<void> depositValue(context, index) async {
         content: SingleChildScrollView(
           child: Container(
             width: 150,
-            height: 170,
+            height: 120,
             child: Column(
               children: [
-                const SizedBox(height: 18),
+                const SizedBox(height: 8),
                 deposito('Monto a Depositar'),
-                const SizedBox(height: 18),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
@@ -360,8 +365,7 @@ Future<void> depositValue(context, index) async {
                                       int.parse(depositoControler.text);
                               ListaData[index].resta = ListaData[index].resta -
                                   int.parse(depositoControler.text);
-                              await Future.delayed(
-                                  const Duration(milliseconds: 500));
+                              await timporEspera(500);
                               listToCSV(ListaData);
                               depositoControler.clear();
                               Navigator.pop(context);
@@ -373,7 +377,7 @@ Future<void> depositValue(context, index) async {
                           }
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(8),
                           decoration: const BoxDecoration(color: Colors.green),
                           child: const Row(
                             children: [
@@ -381,7 +385,7 @@ Future<void> depositValue(context, index) async {
                                   child: Text(
                                 "Aceptar",
                                 style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
+                                    fontSize: 12, color: Colors.white),
                                 textAlign: TextAlign.center,
                               )),
                             ],
@@ -396,7 +400,7 @@ Future<void> depositValue(context, index) async {
                           Navigator.pop(context);
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(8),
                           decoration: const BoxDecoration(color: Colors.red),
                           child: const Row(
                             children: [
@@ -404,7 +408,7 @@ Future<void> depositValue(context, index) async {
                                   child: Text(
                                 "Cancelar",
                                 style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
+                                    fontSize: 12, color: Colors.white),
                                 textAlign: TextAlign.center,
                               )),
                             ],
@@ -427,7 +431,7 @@ Future<void> restaValue(context, index) async {
     context: context,
     builder: (BuildContext context) => AlertDialog(
         title: const Text(
-          "RESTIRO",
+          "RETIRO",
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
@@ -435,12 +439,12 @@ Future<void> restaValue(context, index) async {
         content: SingleChildScrollView(
           child: Container(
             width: 150,
-            height: 170,
+            height: 120,
             child: Column(
               children: [
-                const SizedBox(height: 18),
+                const SizedBox(height: 8),
                 deposito('Monto a retirar'),
-                const SizedBox(height: 18),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
@@ -456,8 +460,7 @@ Future<void> restaValue(context, index) async {
                                       int.parse(depositoControler.text);
                               ListaData[index].resta = ListaData[index].resta +
                                   int.parse(depositoControler.text);
-                              await Future.delayed(
-                                  const Duration(milliseconds: 500));
+                              await timporEspera(500);
                               listToCSV(ListaData);
                               depositoControler.clear();
                               Navigator.pop(context);
@@ -469,7 +472,7 @@ Future<void> restaValue(context, index) async {
                           }
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(8),
                           decoration: const BoxDecoration(color: Colors.green),
                           child: const Row(
                             children: [
@@ -477,7 +480,7 @@ Future<void> restaValue(context, index) async {
                                   child: Text(
                                 "Aceptar",
                                 style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
+                                    fontSize: 12, color: Colors.white),
                                 textAlign: TextAlign.center,
                               )),
                             ],
@@ -492,7 +495,7 @@ Future<void> restaValue(context, index) async {
                           Navigator.pop(context);
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(8),
                           decoration: const BoxDecoration(color: Colors.red),
                           child: const Row(
                             children: [
@@ -500,7 +503,7 @@ Future<void> restaValue(context, index) async {
                                   child: Text(
                                 "Cancelar",
                                 style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
+                                    fontSize: 12, color: Colors.white),
                                 textAlign: TextAlign.center,
                               )),
                             ],
@@ -515,4 +518,96 @@ Future<void> restaValue(context, index) async {
           ),
         )),
   );
+}
+
+Future<bool> eliminarValue(context) async {
+  var respuesta2= false;
+  await showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+        title: const Text(
+          "ELIMINAR",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+        content: SingleChildScrollView(
+          child: Container(
+            width: 100,
+            height: 80,
+            child: Column(
+              children: [
+                const SizedBox(height: 8),
+                const Text(
+                    'Estas seguro que deseas Eliminar',
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () async{
+                          respuesta2 = true;
+                          Navigator.pop(context);
+                          await timporEspera(500);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: const BoxDecoration(color: Colors.green),
+                          child: const Row(
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                    "Aceptar",
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.white),
+                                    textAlign: TextAlign.center,
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: const BoxDecoration(color: Colors.red),
+                          child: const Row(
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                    "Cancelar",
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.white),
+                                    textAlign: TextAlign.center,
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        )),
+  );
+  return respuesta2;
+}
+
+
+Future<void> timporEspera(dur) async {
+  await Future.delayed(Duration(milliseconds: dur));
 }
