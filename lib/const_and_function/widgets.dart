@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
@@ -77,6 +80,7 @@ Widget cuadro(String name, color, int monto, int ahorro,String fecha, int resta,
                             borderRadius: 10.0,
                             direction: Axis
                                 .vertical,
+                            center: estrella100(_value),
                             // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.horizontal.
                           ),
                         ),
@@ -420,3 +424,68 @@ Widget deposito(String titulo) {
   );
 }
 
+
+Widget bottomDevName() {
+  return SizedBox(
+    height: 20,
+    child: Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 0,
+            child: GestureDetector(
+              onTap: () async{
+                //final Uri url = Uri.parse('https://momdontgo.dev');
+                //if (!await launchUrl(url)) {
+                //  throw Exception('Could not launch $url');
+                //}
+              },
+              child: const Text('Developed',
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xA6111111),
+                      fontWeight: FontWeight.bold)),
+            ),
+          ),
+          Expanded(
+            flex: 0,
+            child: GestureDetector(
+              onTap: ()async{
+                //final Uri url = Uri.parse('https://momdontgo.dev');
+                //if (!await launchUrl(url)) {
+                //  throw Exception('Could not launch $url');
+                //}
+              },
+              child: const Text(' By {MomDontGo.Dev}',
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xA6111111),
+                      fontWeight: FontWeight.bold)),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget estrella100(value) {
+  if (value == 1.0){
+    return Container(
+      alignment: Alignment.center,
+      child: const DelayedDisplay(
+        slidingCurve: Curves.fastEaseInToSlowEaseOut,
+        delay: Duration(milliseconds: 600),
+        child: Icon(
+          Icons.star,
+          size: 30,
+          color: Colors.yellow,
+        ),
+      ),
+    );
+  }else{
+    return SizedBox();
+  }
+}

@@ -105,7 +105,9 @@ class _MyAppState extends State<MyApp> {
               },
             ),
           ),
-        ));
+        ),
+      bottomNavigationBar: bottomDevName(),
+    );
   }
 
   Widget remove(index) {

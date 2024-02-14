@@ -7,7 +7,6 @@ import 'package:saving_control/const_and_function/widgets.dart';
 import '../main.dart' show ListaData;
 import '../models/data_model.dart';
 import 'dart:io';
-
 const csvName = "data.csv";
 
 late String csv;
@@ -359,7 +358,10 @@ Future<void> depositValue(context, index) async {
                             if (int.parse(depositoControler.text) <= 0) {
                               var mensaje = 'El monto debe ser mayor a 0';
                               alertError(context, mensaje);
-                            } else {
+                            } else if((int.parse(depositoControler.text)+ListaData[index].val_actual) > ListaData[index].monto){
+                              var mensaje = 'Deposito Supera tu meta';
+                              alertError(context, mensaje);
+                            }else{
                               ListaData[index].val_actual =
                                   ListaData[index].val_actual +
                                       int.parse(depositoControler.text);
@@ -454,7 +456,10 @@ Future<void> restaValue(context, index) async {
                             if (int.parse(depositoControler.text) <= 0) {
                               var mensaje = 'El monto debe ser mayor a 0';
                               alertError(context, mensaje);
-                            } else {
+                            } else if(int.parse(depositoControler.text) > (ListaData[index].val_actual)){
+                              var mensaje = 'Monto mayor a lo ahorrado';
+                              alertError(context, mensaje);
+                            }else{
                               ListaData[index].val_actual =
                                   ListaData[index].val_actual -
                                       int.parse(depositoControler.text);
@@ -611,3 +616,4 @@ Future<bool> eliminarValue(context) async {
 Future<void> timporEspera(dur) async {
   await Future.delayed(Duration(milliseconds: dur));
 }
+
