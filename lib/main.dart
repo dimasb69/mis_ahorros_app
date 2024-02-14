@@ -89,7 +89,7 @@ class _MyAppState extends State<MyApp> {
                 DataList listData = ListaData[index];
                 return DelayedDisplay(
                     slidingCurve: Curves.slowMiddle,
-                    delay: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 800),
                     child: cuadro(
                         listData.name.toString(),
                         listData.color,
@@ -104,6 +104,7 @@ class _MyAppState extends State<MyApp> {
                         retirar(index)));
               },
             ),
+
           ),
         ),
       bottomNavigationBar: bottomDevName(),

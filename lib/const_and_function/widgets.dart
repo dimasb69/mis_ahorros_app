@@ -1,9 +1,8 @@
-import 'dart:ffi';
-
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../main.dart';
 import 'functions.dart';
 
@@ -19,6 +18,7 @@ var dateBox = '${d.day}/${d.month}/${d.year}';
 var iDate = d.day;
 var iMonth = d.month;
 var iYear = d.year;
+const miUrl = 'https://momdontgo.dev';
 
 
 
@@ -437,10 +437,10 @@ Widget bottomDevName() {
             flex: 0,
             child: GestureDetector(
               onTap: () async{
-                //final Uri url = Uri.parse('https://momdontgo.dev');
-                //if (!await launchUrl(url)) {
-                //  throw Exception('Could not launch $url');
-                //}
+                final Uri url = Uri.parse(miUrl);
+                if (!await launchUrl(url)) {
+                  throw Exception('Could not launch $url');
+                }
               },
               child: const Text('Developed',
                   style: TextStyle(
@@ -453,10 +453,10 @@ Widget bottomDevName() {
             flex: 0,
             child: GestureDetector(
               onTap: ()async{
-                //final Uri url = Uri.parse('https://momdontgo.dev');
-                //if (!await launchUrl(url)) {
-                //  throw Exception('Could not launch $url');
-                //}
+                final Uri url = Uri.parse(miUrl);
+                if (!await launchUrl(url)) {
+                  throw Exception('Could not launch $url');
+                }
               },
               child: const Text(' By {MomDontGo.Dev}',
                   style: TextStyle(
