@@ -9,6 +9,7 @@ import 'functions.dart';
 final nameControler = TextEditingController();
 final fechaControler = TextEditingController();
 final montoControler = TextEditingController();
+final depositoControler = TextEditingController();
 var d = DateTime.now();
 late DateTime? newDateF;
 var dateBox = '${d.day}/${d.month}/${d.year}';
@@ -18,7 +19,7 @@ var iYear = d.year;
 
 
 
-Widget cuadro(String name, color, int monto, int ahorro,String fecha, int resta, int index, Widget remove) {
+Widget cuadro(String name, color, int monto, int ahorro,String fecha, int resta, int index, Widget remove, Widget edit, Widget deposit, Widget retirar) {
   var valor = (((ahorro)*100)/(monto)).toInt();
   var _value = (valor/100);
   var split = dateSplit(fecha);
@@ -31,7 +32,8 @@ Widget cuadro(String name, color, int monto, int ahorro,String fecha, int resta,
     child: AnimatedOpacity(
       duration: const Duration(milliseconds: 750),
       opacity: startAnimation ? 1.0 : 0.1,
-      child: Container(
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 600),
         width: screenWidth,
         height: 225,
         decoration: BoxDecoration (
@@ -86,7 +88,18 @@ Widget cuadro(String name, color, int monto, int ahorro,String fecha, int resta,
                 ],
               ),
             ),
-            remove
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  edit,
+                  deposit,
+                  retirar,
+                  remove,
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -136,7 +149,7 @@ Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
                   ),
                   const SizedBox(width: 25),
                   Text(
-                    "Falta: ",
+                    "Restan: ",
                     textAlign: TextAlign.start,
                     style: TextStyle(color: ct, fontWeight: FontWeight.bold),
                   ),
@@ -190,34 +203,54 @@ Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
                 children: [
                   Text("Montos necesarios para completar",
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),)
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),)
                 ],
               ),
               const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Diario:",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(color: ct, fontWeight: FontWeight.bold),
+                  Row(
+                    children: [
+                      Text(
+                        "Diario: ",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 10),
+                      ),
+                      Text(
+                        '$montDias USD',
+                        textAlign: TextAlign.start,
+                        style:  TextStyle(color: ct, fontSize: 10),
+                      ),
+                    ],
                   ),
-                  Text(
-                    '$montDias USD',
-                    textAlign: TextAlign.center,
-                    style:  TextStyle(color: ct),
+                  Row(
+                    children: [
+                      Text(
+                        "Semanal: ",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 10),
+                      ),
+                      Text(
+                        "${num.parse((montDias*7).toStringAsFixed(2))} USD",
+                        textAlign: TextAlign.start,
+                        style:  TextStyle(color: ct, fontSize: 10),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 12),
-                  Text(
-                    "Semanal:",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(color: ct, fontWeight: FontWeight.bold),
-                  ),
-
-                  Text(
-                    "${num.parse((montDias*7).toStringAsFixed(2))} USD",
-                    textAlign: TextAlign.center,
-                    style:  TextStyle(color: ct),
+                  Row(
+                    children: [
+                      Text(
+                        "Mensual: ",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 10),
+                      ),
+                      Text(
+                        "${num.parse((montDias*30).toStringAsFixed(2))} USD",
+                        textAlign: TextAlign.start,
+                        style:  TextStyle(color: ct, fontSize: 10),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -356,3 +389,35 @@ Widget montoW() {
     ),
   );
 }
+
+Widget deposito(String titulo) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+    child: TextField(
+      controller: depositoControler,
+      obscureText: false,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(12),
+        FilteringTextInputFormatter.singleLineFormatter
+      ],
+      decoration: InputDecoration(
+        prefixIcon:
+        const Icon(Icons.money_off, color: Colors.black),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: const BorderSide(
+            width: 10,
+            style: BorderStyle.solid,
+          ),
+        ),
+        hintText: titulo,
+        hintStyle: const TextStyle(color: Colors.black),
+        fillColor: Colors.white38,
+        filled: true,
+      ),
+      style: const TextStyle(color: Colors.black),
+    ),
+  );
+}
+

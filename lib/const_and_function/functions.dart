@@ -28,7 +28,8 @@ Future<void> addItem(context) async {
     context: context,
     builder: (BuildContext context) => AlertDialog(
         title: const Text(
-          "Agregar item",
+          "NUEVO",
+          textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
@@ -166,6 +167,7 @@ Future<void> listToCSV(List<DataList> lista) async {
 }
 
 Future<void> csvRead() async {
+  ListaData = [];
   final String dir = (await getApplicationDocumentsDirectory()).path;
   final String path = '$dir/$csvName';
   final input = File(path).openRead();
@@ -217,4 +219,300 @@ Future<void> csvRead() async {
 List dateSplit(String date) {
   var newDate = date.split('/');
   return newDate;
+}
+
+Future<void> editItem(context, index) async {
+  nameControler.text = ListaData[index].name.toString();
+  montoControler.text = ListaData[index].monto.toString();
+  dateBox = ListaData[index].date.toString();
+  await showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+        title: const Text(
+          "EDITAR",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.bold),
+        ),
+        content: SingleChildScrollView(
+          child: Container(
+            width: 150,
+            height: 300,
+            child: Column(
+              children: [
+                fechaW(context),
+                nameW(),
+                montoW(),
+                const SizedBox(height: 18),
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () async {
+                          if (fechaControler.text != "" &&
+                              nameControler.text != '' &&
+                              montoControler.text != '') {
+                            if (int.parse(montoControler.text) <= 0) {
+                              var mensaje = 'El monto debe ser mayor a 0';
+                              alertError(context, mensaje);
+                            } else {
+                              ListaData[index].name = nameControler.text;
+                              ListaData[index].date = fechaControler.text;
+                              ListaData[index].monto =
+                                  int.parse(montoControler.text);
+                              await Future.delayed(
+                                  const Duration(milliseconds: 500));
+                              listToCSV(ListaData);
+                              nameControler.clear();
+                              fechaControler.clear();
+                              montoControler.clear();
+                              dateBox = '${d.day}/${d.month}/${d.year}';
+                              Navigator.pop(context);
+                            }
+                          } else {
+                            var mensaje =
+                                'Debe incluir todos los campos correctamente';
+                            alertError(context, mensaje);
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: const BoxDecoration(color: Colors.green),
+                          child: const Row(
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                "Aceptar",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              )),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: const BoxDecoration(color: Colors.red),
+                          child: const Row(
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                "Cancelar",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              )),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        )),
+  );
+}
+
+Future<void> depositValue(context, index) async {
+  await showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+        title: const Text(
+          "DEPOSITO",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.bold),
+        ),
+        content: SingleChildScrollView(
+          child: Container(
+            width: 150,
+            height: 170,
+            child: Column(
+              children: [
+                const SizedBox(height: 18),
+                deposito('Monto a Depositar'),
+                const SizedBox(height: 18),
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () async {
+                          if (depositoControler.text != '') {
+                            if (int.parse(depositoControler.text) <= 0) {
+                              var mensaje = 'El monto debe ser mayor a 0';
+                              alertError(context, mensaje);
+                            } else {
+                              ListaData[index].val_actual =
+                                  ListaData[index].val_actual +
+                                      int.parse(depositoControler.text);
+                              ListaData[index].resta = ListaData[index].resta -
+                                  int.parse(depositoControler.text);
+                              await Future.delayed(
+                                  const Duration(milliseconds: 500));
+                              listToCSV(ListaData);
+                              depositoControler.clear();
+                              Navigator.pop(context);
+                            }
+                          } else {
+                            var mensaje =
+                                'Debe incluir todos los campos correctamente';
+                            alertError(context, mensaje);
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: const BoxDecoration(color: Colors.green),
+                          child: const Row(
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                "Aceptar",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              )),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: const BoxDecoration(color: Colors.red),
+                          child: const Row(
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                "Cancelar",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              )),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        )),
+  );
+}
+
+Future<void> restaValue(context, index) async {
+  await showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+        title: const Text(
+          "RESTIRO",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+        content: SingleChildScrollView(
+          child: Container(
+            width: 150,
+            height: 170,
+            child: Column(
+              children: [
+                const SizedBox(height: 18),
+                deposito('Monto a retirar'),
+                const SizedBox(height: 18),
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () async {
+                          if (depositoControler.text != '') {
+                            if (int.parse(depositoControler.text) <= 0) {
+                              var mensaje = 'El monto debe ser mayor a 0';
+                              alertError(context, mensaje);
+                            } else {
+                              ListaData[index].val_actual =
+                                  ListaData[index].val_actual -
+                                      int.parse(depositoControler.text);
+                              ListaData[index].resta = ListaData[index].resta +
+                                  int.parse(depositoControler.text);
+                              await Future.delayed(
+                                  const Duration(milliseconds: 500));
+                              listToCSV(ListaData);
+                              depositoControler.clear();
+                              Navigator.pop(context);
+                            }
+                          } else {
+                            var mensaje =
+                                'Debe incluir todos los campos correctamente';
+                            alertError(context, mensaje);
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: const BoxDecoration(color: Colors.green),
+                          child: const Row(
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                "Aceptar",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              )),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: const BoxDecoration(color: Colors.red),
+                          child: const Row(
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                "Cancelar",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              )),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        )),
+  );
 }
