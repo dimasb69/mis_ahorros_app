@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
 
   Widget remove (index){
     return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
+      padding: const EdgeInsets.only(right: 8.0, top: 8),
       child: GestureDetector(
         child: const Row(
           mainAxisSize: MainAxisSize.max,
@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
         onTap: ()async {
           startAnimation=false;
           setState(() {});
-          await Future.delayed(const Duration(milliseconds: 600));
+          await Future.delayed(const Duration(milliseconds: 750));
           rem_item(index);
           startAnimation = true;
           listToCSV(ListaData);
@@ -72,22 +72,13 @@ class _MyAppState extends State<MyApp> {
     screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
-            title: GestureDetector(
-                child: const Text("Bajo el Colchón"),
-            onTap: () {
-                      setState(() {
-                        startAnimation = !startAnimation;
-                      });
-            },
-            ),
+            title: const Text("Bajo el Colchón"),
           actions: [
             GestureDetector(
                 child: const Icon(Icons.add),
             onTap: () {
               addItem(context).then((_) => {
-                  setState(() {
-
-                })
+                  setState(() {})
               });
 
             }
@@ -103,7 +94,7 @@ class _MyAppState extends State<MyApp> {
           ),
           alignment: Alignment.topCenter,
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(top: 2, bottom: 2),
             child: ListView.builder(
                 primary: false,
                 shrinkWrap: true,
@@ -111,7 +102,8 @@ class _MyAppState extends State<MyApp> {
                 itemBuilder: (BuildContext context, int index){
                   DataList listData = ListaData[index];
                  return DelayedDisplay(
-                     delay: const Duration(milliseconds: 450),
+                   slidingCurve: Curves.slowMiddle,
+                     delay: const Duration(milliseconds: 600),
                      child: cuadro(listData.name.toString(), listData.color, listData.monto, listData.val_actual, listData.date.toString(), listData.resta, index, remove(index)));
                 },
             ),

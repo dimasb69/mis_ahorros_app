@@ -8,17 +8,17 @@ import '../main.dart' show ListaData;
 import '../models/data_model.dart';
 import 'dart:io';
 
-
 const csvName = "data.csv";
 
 late String csv;
 final random = Random();
-Color color_fondo (){
-  Color _color_cuadro = Color.fromARGB(random.nextInt(254), random.nextInt(254), random.nextInt(254), 100);
+Color color_fondo() {
+  Color _color_cuadro = Color.fromARGB(
+      255, random.nextInt(250), random.nextInt(128), random.nextInt(250));
   return _color_cuadro;
 }
 
-rem_item (index) {
+rem_item(index) {
   ListaData.removeAt(index);
 }
 
@@ -47,20 +47,30 @@ Future<void> addItem(context) async {
                     Expanded(
                       child: InkWell(
                         onTap: () {
-                          if (fechaControler.text != "" && nameControler.text != '' && montoControler.text != '' ) {
-                            if (int.parse(montoControler.text) <= 0){
+                          if (fechaControler.text != "" &&
+                              nameControler.text != '' &&
+                              montoControler.text != '') {
+                            if (int.parse(montoControler.text) <= 0) {
                               var mensaje = 'El monto debe ser mayor a 0';
                               alertError(context, mensaje);
-                          }else{
-                              ListaData.add(DataList(nameControler.text, int.parse(montoControler.text), fechaControler.text, 0, 0, color_fondo()));
+                            } else {
+                              ListaData.add(DataList(
+                                  nameControler.text,
+                                  int.parse(montoControler.text),
+                                  fechaControler.text,
+                                  0,
+                                  int.parse(montoControler.text),
+                                  color_fondo()));
                               listToCSV(ListaData);
                               nameControler.clear();
                               fechaControler.clear();
                               montoControler.clear();
+                              dateBox = '${d.day}/${d.month}/${d.year}';
                               Navigator.pop(context);
                             }
-                          }else{
-                            var mensaje = 'Debe incluir todos los campos correctamente';
+                          } else {
+                            var mensaje =
+                                'Debe incluir todos los campos correctamente';
                             alertError(context, mensaje);
                           }
                         },
@@ -71,10 +81,11 @@ Future<void> addItem(context) async {
                             children: [
                               Expanded(
                                   child: Text(
-                                    "Aceptar",
-                                    style: TextStyle(fontSize: 16, color: Colors.white),
-                                    textAlign: TextAlign.center,
-                                  )),
+                                "Aceptar",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              )),
                             ],
                           ),
                         ),
@@ -93,10 +104,11 @@ Future<void> addItem(context) async {
                             children: [
                               Expanded(
                                   child: Text(
-                                    "Cancelar",
-                                    style: TextStyle(fontSize: 16, color: Colors.white),
-                                    textAlign: TextAlign.center,
-                                  )),
+                                "Cancelar",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              )),
                             ],
                           ),
                         ),
@@ -110,8 +122,6 @@ Future<void> addItem(context) async {
         )),
   );
 }
-
-
 
 Future<void> alertError(BuildContext context, texto) async {
   await showDialog(
@@ -132,14 +142,20 @@ Future<void> alertError(BuildContext context, texto) async {
   );
 }
 
-
-Future<void> listToCSV (List<DataList> lista)async {
+Future<void> listToCSV(List<DataList> lista) async {
   List<List<dynamic>> csvData = [
     <String>['name', 'monto', 'date', 'val-.actual', 'resta', 'color'],
-    ...lista.map((item) => [item.name, item.monto, item.date, item.val_actual, item.resta, item.color.toString()])
+    ...lista.map((item) => [
+          item.name,
+          item.monto,
+          item.date,
+          item.val_actual,
+          item.resta,
+          item.color.toString()
+        ])
   ];
   csv = const ListToCsvConverter().convert(csvData);
-  print (csv);
+  print(csv);
 
   final String dir = (await getApplicationDocumentsDirectory()).path;
   final String path = '$dir/$csvName';
@@ -149,48 +165,56 @@ Future<void> listToCSV (List<DataList> lista)async {
   print(dataSaved);
 }
 
-Future<void> csvRead()async {
+Future<void> csvRead() async {
   final String dir = (await getApplicationDocumentsDirectory()).path;
   final String path = '$dir/$csvName';
   final input = File(path).openRead();
-  final fields = await input.transform(utf8.decoder).transform(CsvToListConverter()).toList();
+  final fields = await input
+      .transform(utf8.decoder)
+      .transform(CsvToListConverter())
+      .toList();
   //print('primer valor: ${fields.length}');
-for (int i=0; i < fields.length; i++){
-  if (i != 0){
-    final String name = fields[i][0].toString();
-    final int monto = int.parse(fields[i][1].toString());
-    final String date = fields[i][2].toString();
-    final int val_atc = int.parse(fields[i][3].toString());
-    final int resta = int.parse(fields[i][4].toString());
-    final color = fields[i][5].toString();
-    var exaName = "";
-    for (int c = 0; c < color.length; c++ ){
-      if (c == 6){
-        exaName = exaName+color[c];
-      }else if (c == 7){
-        exaName = exaName+color[c];
-      }else if (c == 8){
-        exaName = exaName+color[c];
-      }else if (c == 9){
-        exaName = exaName+color[c];
-      }else if (c == 10){
-        exaName = exaName+color[c];
-      }else if (c == 11){
-        exaName = exaName+color[c];
-      }else if (c == 12){
-        exaName = exaName+color[c];
-      }else if (c == 13){
-        exaName = exaName+color[c];
-      }else if (c == 14){
-        exaName = exaName+color[c];
-      }else if (c == 15){
-        exaName = exaName+color[c];
+  for (int i = 0; i < fields.length; i++) {
+    if (i != 0) {
+      final String name = fields[i][0].toString();
+      final int monto = int.parse(fields[i][1].toString());
+      final String date = fields[i][2].toString();
+      final int val_atc = int.parse(fields[i][3].toString());
+      final int resta = int.parse(fields[i][4].toString());
+      final color = fields[i][5].toString();
+      var exaName = "";
+      for (int c = 0; c < color.length; c++) {
+        if (c == 6) {
+          exaName = exaName + color[c];
+        } else if (c == 7) {
+          exaName = exaName + color[c];
+        } else if (c == 8) {
+          exaName = exaName + color[c];
+        } else if (c == 9) {
+          exaName = exaName + color[c];
+        } else if (c == 10) {
+          exaName = exaName + color[c];
+        } else if (c == 11) {
+          exaName = exaName + color[c];
+        } else if (c == 12) {
+          exaName = exaName + color[c];
+        } else if (c == 13) {
+          exaName = exaName + color[c];
+        } else if (c == 14) {
+          exaName = exaName + color[c];
+        } else if (c == 15) {
+          exaName = exaName + color[c];
+        }
       }
+      final idColor = int.parse(exaName);
+      ListaData.add(
+          DataList(name, monto, date, val_atc, resta, Color(idColor)));
+      await Future.delayed(const Duration(milliseconds: 300));
     }
-    final idColor = int.parse(exaName);
-    ListaData.add(DataList(name, monto, date, val_atc, resta, Color(idColor)));
-    await Future.delayed(const Duration(milliseconds: 300));
   }
 }
-}
 
+List dateSplit(String date) {
+  var newDate = date.split('/');
+  return newDate;
+}

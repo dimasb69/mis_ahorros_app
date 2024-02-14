@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 import '../main.dart';
+import 'functions.dart';
 
 
 
@@ -9,66 +10,81 @@ final nameControler = TextEditingController();
 final fechaControler = TextEditingController();
 final montoControler = TextEditingController();
 var d = DateTime.now();
-var _date = '${d.day}/${d.month}/${d.year}';
+late DateTime? newDateF;
+var dateBox = '${d.day}/${d.month}/${d.year}';
 var iDate = d.day;
 var iMonth = d.month;
 var iYear = d.year;
 
 
+
 Widget cuadro(String name, color, int monto, int ahorro,String fecha, int resta, int index, Widget remove) {
   var valor = (((ahorro)*100)/(monto)).toInt();
   var _value = (valor/100);
+  var split = dateSplit(fecha);
+  final date1 = DateTime.utc(int.parse(split[2]),int.parse(split[1]), int.parse(split[0]),0,0,0);
+  final date2 = DateTime.utc(d.year, d.month, d.day,0,0,0);
+  final difference = date1.difference(date2);
+  final calculoR = monto-ahorro;
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: AnimatedOpacity(
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 750),
       opacity: startAnimation ? 1.0 : 0.1,
       child: Container(
         width: screenWidth,
-        height: 175,
+        height: 225,
         decoration: BoxDecoration (
-            borderRadius: BorderRadius.circular(15.0),
-            border: Border.all(color: Colors.black87,),
-            color: const Color(0x844E4F4B)
+            borderRadius: BorderRadius.circular(8.0),
+            border: Border.all(color: Color.fromARGB(211, 92, 103, 92)),
+            color: const Color.fromARGB(160, 90, 140, 90)
         ),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                SizedBox(
-                  width: 300,
-                  height: 150,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      data_cuadro(name, monto.toString(), resta.toString(), fecha, ahorro.toString(), index),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: Container(
-                    alignment: Alignment.centerRight,
-                    height: 130,
-                    width: 75,
-                    child: LiquidLinearProgressIndicator(
-                      value: _value, // Defaults to 0.5.
-                      valueColor: AlwaysStoppedAnimation( color ), // Defaults to the current Theme's accentColor.
-                      backgroundColor: Colors
-                          .white38, // Defaults to the current Theme's backgroundColor.
-                      borderColor: Colors.black87,
-                      borderWidth: 1.0,
-                      borderRadius: 10.0,
-                      direction: Axis
-                          .vertical,
-                      center: Text('${valor}%', style: const TextStyle(fontSize: 24, color: Colors.yellow)),// The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.horizontal.
+            Padding(
+              padding: const EdgeInsets.only(left: 6),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  SizedBox(
+                    width: 300,
+                    height: 195,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        data_cuadro(name, monto.toString(), calculoR.toString(), fecha, ahorro.toString(), index, difference.inDays),
+                      ],
                     ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 12, left: 6),
+                          alignment: Alignment.centerRight,
+                          height: 160,
+                          width: 65,
+                          child: LiquidLinearProgressIndicator(
+                            value: _value, // Defaults to 0.5.
+                            valueColor: AlwaysStoppedAnimation( color ), // Defaults to the current Theme's accentColor.
+                            backgroundColor: Color.fromARGB(103, 231, 159, 76), // Defaults to the current Theme's backgroundColor.
+                            borderColor: Color.fromARGB(139, 222, 220, 220),
+                            borderWidth: 1.0,
+                            borderRadius: 10.0,
+                            direction: Axis
+                                .vertical,
+                            // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.horizontal.
+                          ),
+                        ),
+                        Text('${valor}%', style: const TextStyle(fontSize: 18, color: Colors.yellow)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
             remove
           ],
@@ -79,89 +95,156 @@ Widget cuadro(String name, color, int monto, int ahorro,String fecha, int resta,
 }
 
 
-Widget data_cuadro (name, monto, resta, fecha, ahora, index){
+Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
+  var montDias = num.parse((int.parse(resta) / (dif+1)).toStringAsFixed(2));
   Color ct = const Color(0xEC000000);
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      Center(
-        child: Text(
-          name,
-          textAlign: TextAlign.center,
-          style:  TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 24),
+  return Container(
+    width: 300,
+    height: 180,
+    margin: const EdgeInsets.only(top: 5),
+    decoration: BoxDecoration (
+        borderRadius: BorderRadius.circular(15.0),
+        border: Border.all(color: Color.fromARGB(136, 190, 188, 188),),
+        //color: const Color(0x844E4F4B)
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Center(
+          child: Text(
+            name,
+            textAlign: TextAlign.center,
+            style:  TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 24),
+          ),
         ),
-      ),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Text(
-                  "Monto: ",
-                  textAlign: TextAlign.start,
-                  style: TextStyle(color: ct, fontWeight: FontWeight.bold),
-                ),
+        Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "Meta: ",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(color: ct, fontWeight: FontWeight.bold),
+                  ),
 
-                Text(
-                  monto,
-                  textAlign: TextAlign.center,
-                  style:  TextStyle(color: ct),
-                ),
-                const SizedBox(width: 25),
-                Text(
-                  "Resta: ",
-                  textAlign: TextAlign.start,
-                  style: TextStyle(color: ct, fontWeight: FontWeight.bold),
-                ),
+                  Text(
+                    '$monto USD',
+                    textAlign: TextAlign.center,
+                    style:  TextStyle(color: ct),
+                  ),
+                  const SizedBox(width: 25),
+                  Text(
+                    "Falta: ",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(color: ct, fontWeight: FontWeight.bold),
+                  ),
 
-                Text(
-                  resta,
-                  textAlign: TextAlign.center,
-                  style:  TextStyle(color: ct),
-                ),
-              ],
-            ),
-          ],
+                  Text(
+                    '$resta USD',
+                    textAlign: TextAlign.center,
+                    style:  TextStyle(color: ct),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Text(
-              "Fecha estimada:  ",
-              textAlign: TextAlign.start,
-              style: TextStyle(color: ct, fontWeight: FontWeight.bold),
-            ),
+        Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: Row(
+            children: [
+              Text(
+                "Fecha Limite:  ",
+                textAlign: TextAlign.start,
+                style: TextStyle(color: ct, fontWeight: FontWeight.bold),
+              ),
 
-            Text(
-              fecha,
-              textAlign: TextAlign.center,
-              style:  TextStyle(color: ct),
-            ),
-          ],
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Text(
-              "Ahorrado:  ",
-              textAlign: TextAlign.start,
-              style: TextStyle(color: ct, fontWeight: FontWeight.bold),
-            ),
+              Text(
+                fecha,
+                textAlign: TextAlign.center,
+                style:  TextStyle(color: ct),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                "Faltan:  ",
+                textAlign: TextAlign.start,
+                style: TextStyle(color: ct, fontWeight: FontWeight.bold),
+              ),
 
-            Text(
-              ahora,
-              textAlign: TextAlign.center,
-              style:  TextStyle(color: ct),
-            ),
-          ],
+              Text(
+                "${dif+1} Dias",
+                textAlign: TextAlign.center,
+                style:  TextStyle(color: ct),
+              ),
+            ],
+          ),
         ),
-      ),
-    ],
+        Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: Column(
+            children: [
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Montos necesarios para completar",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),)
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Diario:",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(color: ct, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '$montDias USD',
+                    textAlign: TextAlign.center,
+                    style:  TextStyle(color: ct),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    "Semanal:",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(color: ct, fontWeight: FontWeight.bold),
+                  ),
+
+                  Text(
+                    "${num.parse((montDias*7).toStringAsFixed(2))} USD",
+                    textAlign: TextAlign.center,
+                    style:  TextStyle(color: ct),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Ahorrado:  ",
+                textAlign: TextAlign.start,
+                style: TextStyle(color: ct, fontWeight: FontWeight.bold),
+              ),
+
+              Text(
+                ahora,
+                textAlign: TextAlign.center,
+                style:  TextStyle(color: ct),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
   );
 }
 
@@ -173,7 +256,7 @@ Widget nameW() {
       obscureText: false,
       decoration: InputDecoration(
         prefixIcon:
-        const Icon(Icons.account_circle_outlined, color: Colors.black),
+        const Icon(Icons.add_card, color: Colors.black),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: const BorderSide(
@@ -193,7 +276,7 @@ Widget nameW() {
 
 
 Widget fechaW(context) {
-  fechaControler.text = _date;
+  fechaControler.text = dateBox;
   var dp = DateTime.now();
   DateTime dateInit = DateTime(dp.year, dp.month, dp.day);
   return Expanded(
@@ -209,8 +292,8 @@ Widget fechaW(context) {
               lastDate: DateTime(2050, 12, 31));
           if (newDate2 != null) {
             if (newDate2.day >= 0) {
-              _date = '${newDate2.day}/${newDate2.month}/${newDate2.year}';
-              fechaControler.text = _date;
+              dateBox = '${newDate2.day}/${newDate2.month}/${newDate2.year}';
+              fechaControler.text = dateBox;
               FocusScope.of(context).requestFocus(FocusNode());
             }
           } else {
@@ -256,7 +339,7 @@ Widget montoW() {
       ],
       decoration: InputDecoration(
         prefixIcon:
-        const Icon(Icons.account_circle_outlined, color: Colors.black),
+        const Icon(Icons.money_off, color: Colors.black),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: const BorderSide(
