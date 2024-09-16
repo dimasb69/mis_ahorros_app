@@ -1,16 +1,10 @@
-# saving_control
+<h2 align="center"> {MomDontGo.Dev} --  Projects </h2>
 
-A new Flutter project.
 
-## Getting Started
+A new Flutter project.	<h1 align="center"> Una App para tener un control de los Ahorros </h1>
 
-This project is a starting point for a Flutter application.
+<h3 align="center">Permite separar por el tipo de Ahorro, llevar un control de cada deposito</h3>
+## Getting Started	<h3 align="center">Te da un calculo de cuanto tardaras y que monto debes guardar Diario - Semanal - Mensual</h3>
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<h3 align="center">No tiene limite para crear ahorros y posee un contenedor animado en el que se ve el progreso </h3>
+This project is a starting point for a Flutter application.	<hr><br>
