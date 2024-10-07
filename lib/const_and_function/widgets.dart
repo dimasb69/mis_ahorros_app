@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../main.dart';
+import '../pages/savings.dart';
 import 'functions.dart';
-
-
 
 final nameControler = TextEditingController();
 final fechaControler = TextEditingController();
@@ -20,16 +18,26 @@ var iMonth = d.month;
 var iYear = d.year;
 const miUrl = 'https://momdontgo.dev';
 
-
-
-Widget cuadro(String name, color, int monto, int ahorro,String fecha, int resta, int index, Widget remove, Widget edit, Widget deposit, Widget retirar) {
-  var valor = (((ahorro)*100)/(monto)).toInt();
-  var _value = (valor/100);
+Widget cuadro(
+    String name,
+    color,
+    int monto,
+    int ahorro,
+    String fecha,
+    int resta,
+    int index,
+    Widget remove,
+    Widget edit,
+    Widget deposit,
+    Widget retirar) {
+  var valor = (((ahorro) * 100) / (monto)).toInt();
+  var _value = (valor / 100);
   var split = dateSplit(fecha);
-  final date1 = DateTime.utc(int.parse(split[2]),int.parse(split[1]), int.parse(split[0]),0,0,0);
-  final date2 = DateTime.utc(d.year, d.month, d.day,0,0,0);
+  final date1 = DateTime.utc(
+      int.parse(split[2]), int.parse(split[1]), int.parse(split[0]), 0, 0, 0);
+  final date2 = DateTime.utc(d.year, d.month, d.day, 0, 0, 0);
   final difference = date1.difference(date2);
-  final calculoR = monto-ahorro;
+  final calculoR = monto - ahorro;
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: AnimatedOpacity(
@@ -39,11 +47,10 @@ Widget cuadro(String name, color, int monto, int ahorro,String fecha, int resta,
         duration: const Duration(milliseconds: 600),
         width: screenWidth,
         height: 230,
-        decoration: BoxDecoration (
+        decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.0),
             border: Border.all(color: Color.fromARGB(211, 92, 103, 92)),
-            color: const Color.fromARGB(160, 90, 140, 90)
-        ),
+            color: const Color.fromARGB(160, 90, 140, 90)),
         child: Column(
           children: [
             Padding(
@@ -58,7 +65,8 @@ Widget cuadro(String name, color, int monto, int ahorro,String fecha, int resta,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        data_cuadro(name, monto.toString(), calculoR.toString(), fecha, ahorro.toString(), index, difference.inDays),
+                        data_cuadro(name, monto.toString(), calculoR.toString(),
+                            fecha, ahorro.toString(), index, difference.inDays),
                       ],
                     ),
                   ),
@@ -72,19 +80,23 @@ Widget cuadro(String name, color, int monto, int ahorro,String fecha, int resta,
                           height: 160,
                           width: 65,
                           child: LiquidLinearProgressIndicator(
-                            value: _value, // Defaults to 0.5.
-                            valueColor: AlwaysStoppedAnimation( color ), // Defaults to the current Theme's accentColor.
-                            backgroundColor: Color.fromARGB(103, 231, 159, 76), // Defaults to the current Theme's backgroundColor.
+                            value: _value,
+                            // Defaults to 0.5.
+                            valueColor: AlwaysStoppedAnimation(color),
+                            // Defaults to the current Theme's accentColor.
+                            backgroundColor: Color.fromARGB(103, 231, 159, 76),
+                            // Defaults to the current Theme's backgroundColor.
                             borderColor: Color.fromARGB(139, 222, 220, 220),
                             borderWidth: 1.0,
                             borderRadius: 10.0,
-                            direction: Axis
-                                .vertical,
+                            direction: Axis.vertical,
                             center: estrella100(_value),
                             // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.horizontal.
                           ),
                         ),
-                        Text('${valor}%', style: const TextStyle(fontSize: 18, color: Colors.yellow)),
+                        Text('${valor}%',
+                            style: const TextStyle(
+                                fontSize: 18, color: Colors.yellow)),
                       ],
                     ),
                   ),
@@ -110,18 +122,19 @@ Widget cuadro(String name, color, int monto, int ahorro,String fecha, int resta,
   );
 }
 
-
-Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
-  var montDias = num.parse((int.parse(resta) / (dif+1)).toStringAsFixed(2));
+Widget data_cuadro(name, monto, resta, fecha, ahora, index, dif) {
+  var montDias = num.parse((int.parse(resta) / (dif + 1)).toStringAsFixed(2));
   Color ct = const Color(0xEC000000);
   return Container(
     width: 300,
     height: 180,
     margin: const EdgeInsets.only(top: 5),
-    decoration: BoxDecoration (
-        borderRadius: BorderRadius.circular(15.0),
-        border: Border.all(color: Color.fromARGB(136, 190, 188, 188),),
-        //color: const Color(0x844E4F4B)
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(15.0),
+      border: Border.all(
+        color: Color.fromARGB(136, 190, 188, 188),
+      ),
+      //color: const Color(0x844E4F4B)
     ),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -130,7 +143,8 @@ Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
           child: Text(
             name,
             textAlign: TextAlign.center,
-            style:  TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 24),
+            style:
+                TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 24),
           ),
         ),
         Padding(
@@ -138,17 +152,17 @@ Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
           child: Column(
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     "Meta: ",
                     textAlign: TextAlign.start,
                     style: TextStyle(color: ct, fontWeight: FontWeight.bold),
                   ),
-
                   Text(
                     '$monto USD',
                     textAlign: TextAlign.center,
-                    style:  TextStyle(color: ct),
+                    style: TextStyle(color: ct),
                   ),
                   const SizedBox(width: 25),
                   Text(
@@ -156,11 +170,10 @@ Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
                     textAlign: TextAlign.start,
                     style: TextStyle(color: ct, fontWeight: FontWeight.bold),
                   ),
-
                   Text(
                     '$resta USD',
                     textAlign: TextAlign.center,
-                    style:  TextStyle(color: ct),
+                    style: TextStyle(color: ct),
                   ),
                 ],
               ),
@@ -170,29 +183,38 @@ Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
         Padding(
           padding: const EdgeInsets.all(3.0),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "Fecha Limite:  ",
-                textAlign: TextAlign.start,
-                style: TextStyle(color: ct, fontWeight: FontWeight.bold),
-              ),
-
-              Text(
-                fecha,
-                textAlign: TextAlign.center,
-                style:  TextStyle(color: ct),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Fecha Limite:  ",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(color: ct, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    fecha,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: ct),
+                  ),
+                ],
               ),
               const SizedBox(width: 12),
-              Text(
-                "Faltan:  ",
-                textAlign: TextAlign.start,
-                style: TextStyle(color: ct, fontWeight: FontWeight.bold),
-              ),
-
-              Text(
-                "${dif+1} Dias",
-                textAlign: TextAlign.center,
-                style:  TextStyle(color: ct),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Faltan:  ",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(color: ct, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "${dif + 1} Dias",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: ct),
+                  ),
+                ],
               ),
             ],
           ),
@@ -204,9 +226,14 @@ Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Montos necesarios para completar",
+                  Text(
+                    "Montos necesarios para completar",
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12),)
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12),
+                  )
                 ],
               ),
               const SizedBox(height: 8),
@@ -218,12 +245,15 @@ Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
                       Text(
                         "Diario: ",
                         textAlign: TextAlign.start,
-                        style: TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 9),
+                        style: TextStyle(
+                            color: ct,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 9),
                       ),
                       Text(
                         '$montDias USD',
                         textAlign: TextAlign.start,
-                        style:  TextStyle(color: ct, fontSize: 9),
+                        style: TextStyle(color: ct, fontSize: 9),
                       ),
                     ],
                   ),
@@ -232,12 +262,15 @@ Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
                       Text(
                         "Semanal: ",
                         textAlign: TextAlign.start,
-                        style: TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 9),
+                        style: TextStyle(
+                            color: ct,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 9),
                       ),
                       Text(
-                        "${num.parse((montDias*7).toStringAsFixed(2))} USD",
+                        "${num.parse((montDias * 7).toStringAsFixed(2))} USD",
                         textAlign: TextAlign.start,
-                        style:  TextStyle(color: ct, fontSize: 9),
+                        style: TextStyle(color: ct, fontSize: 9),
                       ),
                     ],
                   ),
@@ -246,12 +279,15 @@ Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
                       Text(
                         "Mensual: ",
                         textAlign: TextAlign.start,
-                        style: TextStyle(color: ct, fontWeight: FontWeight.bold, fontSize: 9),
+                        style: TextStyle(
+                            color: ct,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 9),
                       ),
                       Text(
-                        "${num.parse((montDias*30).toStringAsFixed(2))} USD",
+                        "${num.parse((montDias * 30).toStringAsFixed(2))} USD",
                         textAlign: TextAlign.start,
-                        style:  TextStyle(color: ct, fontSize: 9),
+                        style: TextStyle(color: ct, fontSize: 9),
                       ),
                     ],
                   ),
@@ -270,11 +306,10 @@ Widget data_cuadro (name, monto, resta, fecha, ahora, index, dif){
                 textAlign: TextAlign.start,
                 style: TextStyle(color: ct, fontWeight: FontWeight.bold),
               ),
-
               Text(
                 ahora,
                 textAlign: TextAlign.center,
-                style:  TextStyle(color: ct),
+                style: TextStyle(color: ct),
               ),
             ],
           ),
@@ -291,8 +326,7 @@ Widget nameW() {
       controller: nameControler,
       obscureText: false,
       decoration: InputDecoration(
-        prefixIcon:
-        const Icon(Icons.add_card, color: Colors.black),
+        prefixIcon: const Icon(Icons.add_card, color: Colors.black),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: const BorderSide(
@@ -309,7 +343,6 @@ Widget nameW() {
     ),
   );
 }
-
 
 Widget fechaW(context) {
   fechaControler.text = dateBox;
@@ -374,8 +407,7 @@ Widget montoW() {
         FilteringTextInputFormatter.singleLineFormatter
       ],
       decoration: InputDecoration(
-        prefixIcon:
-        const Icon(Icons.money_off, color: Colors.black),
+        prefixIcon: const Icon(Icons.money_off, color: Colors.black),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: const BorderSide(
@@ -405,8 +437,7 @@ Widget deposito(String titulo) {
         FilteringTextInputFormatter.singleLineFormatter
       ],
       decoration: InputDecoration(
-        prefixIcon:
-        const Icon(Icons.money_off, color: Colors.black),
+        prefixIcon: const Icon(Icons.money_off, color: Colors.black),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: const BorderSide(
@@ -424,7 +455,6 @@ Widget deposito(String titulo) {
   );
 }
 
-
 Widget bottomDevName() {
   return SizedBox(
     height: 20,
@@ -436,7 +466,7 @@ Widget bottomDevName() {
           Expanded(
             flex: 0,
             child: GestureDetector(
-              onTap: () async{
+              onTap: () async {
                 final Uri url = Uri.parse(miUrl);
                 if (!await launchUrl(url)) {
                   throw Exception('Could not launch $url');
@@ -452,7 +482,7 @@ Widget bottomDevName() {
           Expanded(
             flex: 0,
             child: GestureDetector(
-              onTap: ()async{
+              onTap: () async {
                 final Uri url = Uri.parse(miUrl);
                 if (!await launchUrl(url)) {
                   throw Exception('Could not launch $url');
@@ -472,7 +502,7 @@ Widget bottomDevName() {
 }
 
 Widget estrella100(value) {
-  if (value == 1.0){
+  if (value == 1.0) {
     return Container(
       alignment: Alignment.center,
       child: const DelayedDisplay(
@@ -485,7 +515,7 @@ Widget estrella100(value) {
         ),
       ),
     );
-  }else{
+  } else {
     return SizedBox();
   }
 }

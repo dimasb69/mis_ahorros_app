@@ -4,7 +4,7 @@ import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:saving_control/const_and_function/widgets.dart';
-import '../main.dart' show ListaData;
+import '../pages/savings.dart' show ListaData;
 import '../models/data_model.dart';
 import 'dart:io';
 const csvName = "data.csv";
