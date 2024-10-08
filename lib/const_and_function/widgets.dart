@@ -18,7 +18,7 @@ var iMonth = d.month;
 var iYear = d.year;
 const miUrl = 'https://momdontgo.dev';
 
-Widget cuadro(
+Widget boxW(
     String name,
     color,
     int monto,
@@ -65,7 +65,7 @@ Widget cuadro(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        data_cuadro(name, monto.toString(), calculoR.toString(),
+                        dataBox(name, monto.toString(), calculoR.toString(),
                             fecha, ahorro.toString(), index, difference.inDays),
                       ],
                     ),
@@ -82,7 +82,7 @@ Widget cuadro(
                           child: LiquidLinearProgressIndicator(
                             value: _value,
                             // Defaults to 0.5.
-                            valueColor: AlwaysStoppedAnimation(color),
+                            valueColor: AlwaysStoppedAnimation(Color(int.parse(color))),
                             // Defaults to the current Theme's accentColor.
                             backgroundColor: Color.fromARGB(103, 231, 159, 76),
                             // Defaults to the current Theme's backgroundColor.
@@ -122,7 +122,7 @@ Widget cuadro(
   );
 }
 
-Widget data_cuadro(name, monto, resta, fecha, ahora, index, dif) {
+Widget dataBox(name, monto, resta, fecha, ahora, index, dif) {
   var montDias = num.parse((int.parse(resta) / (dif + 1)).toStringAsFixed(2));
   Color ct = const Color(0xEC000000);
   return Container(
@@ -181,7 +181,7 @@ Widget data_cuadro(name, monto, resta, fecha, ahora, index, dif) {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(3.0),
+          padding: const EdgeInsets.all(2.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -220,8 +220,9 @@ Widget data_cuadro(name, monto, resta, fecha, ahora, index, dif) {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(3.0),
+          padding: const EdgeInsets.all(2.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -236,59 +237,76 @@ Widget data_cuadro(name, monto, resta, fecha, ahora, index, dif) {
                   )
                 ],
               ),
-              const SizedBox(height: 8),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Row(
                     children: [
-                      Text(
-                        "Diario: ",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            color: ct,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 9),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Diario: ",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                color: ct,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 9),
+                          ),
+                          Text(
+                            '$montDias USD',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(color: ct, fontSize: 9),
+                          ),
+                        ],
+
                       ),
-                      Text(
-                        '$montDias USD',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(color: ct, fontSize: 9),
+
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Semanal: ",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                color: ct,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 9),
+                          ),
+                          Text(
+                            "${num.parse((montDias * 7).toStringAsFixed(2))} USD",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(color: ct, fontSize: 9),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      Text(
-                        "Semanal: ",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            color: ct,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 9),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Mensual: ",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                color: ct,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 9),
+                          ),
+                          Text(
+                            "${num.parse((montDias * 30).toStringAsFixed(2))} USD",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(color: ct, fontSize: 9),
+                          ),
+                        ],
                       ),
-                      Text(
-                        "${num.parse((montDias * 7).toStringAsFixed(2))} USD",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(color: ct, fontSize: 9),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Mensual: ",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            color: ct,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 9),
-                      ),
-                      Text(
-                        "${num.parse((montDias * 30).toStringAsFixed(2))} USD",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(color: ct, fontSize: 9),
-                      ),
+
                     ],
                   ),
                 ],
@@ -344,7 +362,7 @@ Widget nameW() {
   );
 }
 
-Widget fechaW(context) {
+Widget dateW(context) {
   fechaControler.text = dateBox;
   var dp = DateTime.now();
   DateTime dateInit = DateTime(dp.year, dp.month, dp.day);
@@ -358,7 +376,7 @@ Widget fechaW(context) {
               context: context,
               initialDate: dateInit,
               firstDate: DateTime(iYear, iMonth, iDate),
-              lastDate: DateTime(2050, 12, 31));
+              lastDate: DateTime(iYear + 50, 12, 31));
           if (newDate2 != null) {
             if (newDate2.day >= 0) {
               dateBox = '${newDate2.day}/${newDate2.month}/${newDate2.year}';
@@ -395,7 +413,7 @@ Widget fechaW(context) {
   );
 }
 
-Widget montoW() {
+Widget amountW() {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
     child: TextField(
@@ -425,7 +443,7 @@ Widget montoW() {
   );
 }
 
-Widget deposito(String titulo) {
+Widget addition(String tittle) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
     child: TextField(
@@ -445,7 +463,7 @@ Widget deposito(String titulo) {
             style: BorderStyle.solid,
           ),
         ),
-        hintText: titulo,
+        hintText: tittle,
         hintStyle: const TextStyle(color: Colors.black),
         fillColor: Colors.white38,
         filled: true,

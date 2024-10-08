@@ -21,7 +21,7 @@ class Savings extends StatefulWidget {
 class _SavingsState extends State<Savings> {
   @override
   void initState() {
-    csvRead().then((value) => setState(() {}));
+    csvRead(context).then((value) => setState(() {}));
     super.initState();
   }
 
@@ -55,7 +55,12 @@ class _SavingsState extends State<Savings> {
             icon: const Icon(Icons.add),
             tooltip: 'Agregar Nuevo',
             onPressed: () {
-              addItem(context).then((_) => {setState(() {})});
+              addItem(context).whenComplete((){
+                sleepTime(1500);
+                csvRead(context).then((value) => setState(() {}));
+                setState(() {ListaData;});
+              });
+
             },
           ),
           const SizedBox(width: 10),
@@ -79,7 +84,7 @@ class _SavingsState extends State<Savings> {
               return DelayedDisplay(
                   slidingCurve: Curves.slowMiddle,
                   delay: const Duration(milliseconds: 800),
-                  child: cuadro(
+                  child: boxW(
                       listData.name.toString(),
                       listData.color,
                       listData.monto,
@@ -90,7 +95,7 @@ class _SavingsState extends State<Savings> {
                       remove(index),
                       edit(index),
                       deposit(index),
-                      retirar(index)));
+                      subtract(index)));
             },
           ),
 
@@ -114,16 +119,16 @@ class _SavingsState extends State<Savings> {
           ],
         ),
         onTap: () async {
-          eliminarValue(context).then((value)  async{
+          dellValue(context).then((value)  async{
             print(value.toString());
             if (value)
             {
               startAnimation = false;
               setState(() {});
-              await timporEspera(600);
-              rem_item(index);
+              await sleepTime(600);
+              remItem(index);
               startAnimation = true;
-              listToCSV(ListaData);
+              listToCSV(ListaData, context);
               setState(() {});
             }
           });
@@ -172,7 +177,7 @@ class _SavingsState extends State<Savings> {
     );
   }
 
-  Widget retirar(index) {
+  Widget subtract(index) {
     return Padding(
       padding: const EdgeInsets.only(right: 8.0, top: 8),
       child: GestureDetector(
@@ -186,7 +191,7 @@ class _SavingsState extends State<Savings> {
           ],
         ),
         onTap: () async {
-          restaValue(context, index).then((value) => setState(() {}));
+          subtractionValue(context, index).then((value) => setState(() {}));
         },
       ),
     );

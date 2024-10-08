@@ -7,17 +7,19 @@ import 'package:saving_control/const_and_function/widgets.dart';
 import '../pages/savings.dart' show ListaData;
 import '../models/data_model.dart';
 import 'dart:io';
+
 const csvName = "data.csv";
 
 late String csv;
 final random = Random();
-Color color_fondo() {
-  Color _color_cuadro = Color.fromARGB(
+
+backColor() {
+  Color colorBar = Color.fromARGB(
       255, random.nextInt(250), random.nextInt(128), random.nextInt(250));
-  return _color_cuadro;
+  return colorBar.value;
 }
 
-rem_item(index) {
+remItem(index) {
   ListaData.removeAt(index);
 }
 
@@ -33,26 +35,28 @@ Future<void> addItem(context) async {
               color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
         content: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             width: 150,
             height: 270,
             child: Column(
               children: [
-                fechaW(context),
+                dateW(context),
                 nameW(),
-                montoW(),
+                amountW(),
                 const SizedBox(height: 15),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                        ),
+                        onPressed: () {
                           if (fechaControler.text != "" &&
                               nameControler.text != '' &&
                               montoControler.text != '') {
                             if (int.parse(montoControler.text) <= 0) {
-                              var mensaje = 'El monto debe ser mayor a 0';
-                              alertError(context, mensaje);
+                              alertError(context, 'El monto debe ser mayor a 0');
                             } else {
                               ListaData.add(DataList(
                                   nameControler.text,
@@ -60,8 +64,8 @@ Future<void> addItem(context) async {
                                   fechaControler.text,
                                   0,
                                   int.parse(montoControler.text),
-                                  color_fondo()));
-                              listToCSV(ListaData);
+                                  backColor()));
+                              listToCSV(ListaData, context);
                               nameControler.clear();
                               fechaControler.clear();
                               montoControler.clear();
@@ -69,54 +73,29 @@ Future<void> addItem(context) async {
                               Navigator.pop(context);
                             }
                           } else {
-                            var mensaje =
-                                'Debe incluir todos los campos correctamente';
-                            alertError(context, mensaje);
+                            alertError(context, 'Debe incluir todos los campos correctamente');
                           }
                         },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(color: Colors.green),
-                          child: const Row(
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                "Aceptar",
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.white),
-                                textAlign: TextAlign.center,
-                              )),
-                            ],
-                          ),
+                        child: const Text(
+                          "Aceptar",
+                          style: TextStyle(fontSize: 12, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        )),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
+                        onPressed: () {
                           nameControler.clear();
                           fechaControler.clear();
                           montoControler.clear();
                           Navigator.pop(context);
                         },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(color: Colors.red),
-                          child: const Row(
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                "Cancelar",
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.white),
-                                textAlign: TextAlign.center,
-                              )),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                        child: const Text(
+                          "Cancelar",
+                          style: TextStyle(fontSize: 12, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        )),
                   ],
                 )
               ],
@@ -145,7 +124,7 @@ Future<void> alertError(BuildContext context, texto) async {
   );
 }
 
-Future<void> listToCSV(List<DataList> lista) async {
+Future<void> listToCSV(List<DataList> lista, context) async {
   List<List<dynamic>> csvData = [
     <String>['name', 'monto', 'date', 'val-.actual', 'resta', 'color'],
     ...lista.map((item) => [
@@ -158,64 +137,44 @@ Future<void> listToCSV(List<DataList> lista) async {
         ])
   ];
   csv = const ListToCsvConverter().convert(csvData);
-  print(csv);
-
+  csv;
   final String dir = (await getApplicationDocumentsDirectory()).path;
   final String path = '$dir/$csvName';
   final File file = File(path);
 
   var dataSaved = await file.writeAsString(csv);
-  print(dataSaved);
+  dataSaved;
+  snackShow('Data Updated', context);
 }
 
-Future<void> csvRead() async {
+Future<void> csvRead(context) async {
   ListaData = [];
   final String dir = (await getApplicationDocumentsDirectory()).path;
   final String path = '$dir/$csvName';
   final input = File(path).openRead();
-  final fields = await input
-      .transform(utf8.decoder)
-      .transform(CsvToListConverter())
-      .toList();
-  //print('primer valor: ${fields.length}');
-  for (int i = 0; i < fields.length; i++) {
-    if (i != 0) {
-      final String name = fields[i][0].toString();
-      final int monto = int.parse(fields[i][1].toString());
-      final String date = fields[i][2].toString();
-      final int val_atc = int.parse(fields[i][3].toString());
-      final int resta = int.parse(fields[i][4].toString());
-      final color = fields[i][5].toString();
-      var exaName = "";
-      for (int c = 0; c < color.length; c++) {
-        if (c == 6) {
-          exaName = exaName + color[c];
-        } else if (c == 7) {
-          exaName = exaName + color[c];
-        } else if (c == 8) {
-          exaName = exaName + color[c];
-        } else if (c == 9) {
-          exaName = exaName + color[c];
-        } else if (c == 10) {
-          exaName = exaName + color[c];
-        } else if (c == 11) {
-          exaName = exaName + color[c];
-        } else if (c == 12) {
-          exaName = exaName + color[c];
-        } else if (c == 13) {
-          exaName = exaName + color[c];
-        } else if (c == 14) {
-          exaName = exaName + color[c];
-        } else if (c == 15) {
-          exaName = exaName + color[c];
-        }
+  try {
+    final fields = await input
+        .transform(utf8.decoder)
+        .transform(const CsvToListConverter())
+        .toList();
+    fields;
+    for (int i = 0; i < fields.length; i++) {
+      if (i > 0) {
+        final String name = fields[i][0].toString();
+        final int amount = int.parse(fields[i][1].toString());
+        final String date = fields[i][2].toString();
+        final int valAtc = int.parse(fields[i][3].toString());
+        final int minus = int.parse(fields[i][4].toString());
+        final color = fields[i][5].toString();
+        ListaData.add(
+            DataList(name, amount, date, valAtc, minus, color));
+        await sleepTime(250);
       }
-      final idColor = int.parse(exaName);
-      ListaData.add(
-          DataList(name, monto, date, val_atc, resta, Color(idColor)));
-      await timporEspera(250);
     }
+  } catch (e) {
+    e;
   }
+  //print('primer valor: ${fields.length}');
 }
 
 List dateSplit(String date) {
@@ -238,20 +197,23 @@ Future<void> editItem(context, index) async {
               color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
         content: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             width: 150,
             height: 270,
             child: Column(
               children: [
-                fechaW(context),
+                dateW(context),
                 nameW(),
-                montoW(),
+                amountW(),
                 const SizedBox(height: 15),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () async {
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                        ),
+                        onPressed: () async {
                           if (fechaControler.text != "" &&
                               nameControler.text != '' &&
                               montoControler.text != '') {
@@ -263,8 +225,8 @@ Future<void> editItem(context, index) async {
                               ListaData[index].date = fechaControler.text;
                               ListaData[index].monto =
                                   int.parse(montoControler.text);
-                              await timporEspera(500);
-                              listToCSV(ListaData);
+                              await sleepTime(500);
+                              listToCSV(ListaData, context);
                               nameControler.clear();
                               fechaControler.clear();
                               montoControler.clear();
@@ -272,54 +234,27 @@ Future<void> editItem(context, index) async {
                               Navigator.pop(context);
                             }
                           } else {
-                            var mensaje =
-                                'Debe incluir todos los campos correctamente';
-                            alertError(context, mensaje);
+                            alertError(context,
+                                'Debe incluir todos los campos correctamente');
                           }
                         },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(color: Colors.green),
-                          child: const Row(
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                "Aceptar",
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.white),
-                                textAlign: TextAlign.center,
-                              )),
-                            ],
-                          ),
+                        child: const Text(
+                          "Aceptar",
+                          style: TextStyle(fontSize: 12, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        )),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          nameControler.clear();
-                          fechaControler.clear();
-                          montoControler.clear();
+                        onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(color: Colors.red),
-                          child: const Row(
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                "Cancelar",
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.white),
-                                textAlign: TextAlign.center,
-                              )),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                        child: const Text(
+                          "Cancelar",
+                          style: TextStyle(fontSize: 12, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        )),
                   ],
                 )
               ],
@@ -341,83 +276,64 @@ Future<void> depositValue(context, index) async {
               color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
         content: SingleChildScrollView(
-          child: Container(
-            width: 150,
-            height: 120,
+          child: SizedBox(
+            width: 160,
+            height: 135,
             child: Column(
               children: [
                 const SizedBox(height: 8),
-                deposito('Monto a Depositar'),
+                addition('Monto a Depositar'),
                 const SizedBox(height: 10),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () async {
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                        ),
+                        onPressed: () async {
                           if (depositoControler.text != '') {
                             if (int.parse(depositoControler.text) <= 0) {
                               var mensaje = 'El monto debe ser mayor a 0';
                               alertError(context, mensaje);
-                            } else if((int.parse(depositoControler.text)+ListaData[index].val_actual) > ListaData[index].monto){
+                            } else if ((int.parse(depositoControler.text) +
+                                    ListaData[index].val_actual) >
+                                ListaData[index].monto) {
                               var mensaje = 'Deposito Supera tu meta';
                               alertError(context, mensaje);
-                            }else{
+                            } else {
                               ListaData[index].val_actual =
                                   ListaData[index].val_actual +
                                       int.parse(depositoControler.text);
                               ListaData[index].resta = ListaData[index].resta -
                                   int.parse(depositoControler.text);
-                              await timporEspera(500);
-                              listToCSV(ListaData);
+                              await sleepTime(500);
+                              listToCSV(ListaData, context);
                               depositoControler.clear();
                               Navigator.pop(context);
                             }
                           } else {
-                            var mensaje =
-                                'Debe incluir todos los campos correctamente';
-                            alertError(context, mensaje);
+                            alertError(context,
+                                'Debe incluir todos los campos correctamente');
                           }
                         },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(color: Colors.green),
-                          child: const Row(
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                "Aceptar",
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.white),
-                                textAlign: TextAlign.center,
-                              )),
-                            ],
-                          ),
+                        child: const Text(
+                          "Aceptar",
+                          style: TextStyle(fontSize: 12, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        )),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
+                        onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(color: Colors.red),
-                          child: const Row(
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                "Cancelar",
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.white),
-                                textAlign: TextAlign.center,
-                              )),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                        child: const Text(
+                          "Cancelar",
+                          style: TextStyle(fontSize: 12, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        )),
                   ],
                 )
               ],
@@ -427,7 +343,7 @@ Future<void> depositValue(context, index) async {
   );
 }
 
-Future<void> restaValue(context, index) async {
+Future<void> subtractionValue(context, index) async {
   await showDialog(
     barrierDismissible: false,
     context: context,
@@ -439,83 +355,63 @@ Future<void> restaValue(context, index) async {
               color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
         ),
         content: SingleChildScrollView(
-          child: Container(
-            width: 150,
-            height: 120,
+          child: SizedBox(
+            width: 160,
+            height: 135,
             child: Column(
               children: [
                 const SizedBox(height: 8),
-                deposito('Monto a retirar'),
+                addition('Monto a retirar'),
                 const SizedBox(height: 10),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () async {
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                        ),
+                        onPressed: () async {
                           if (depositoControler.text != '') {
                             if (int.parse(depositoControler.text) <= 0) {
                               var mensaje = 'El monto debe ser mayor a 0';
                               alertError(context, mensaje);
-                            } else if(int.parse(depositoControler.text) > (ListaData[index].val_actual)){
+                            } else if (int.parse(depositoControler.text) >
+                                (ListaData[index].val_actual)) {
                               var mensaje = 'Monto mayor a lo ahorrado';
                               alertError(context, mensaje);
-                            }else{
+                            } else {
                               ListaData[index].val_actual =
                                   ListaData[index].val_actual -
                                       int.parse(depositoControler.text);
                               ListaData[index].resta = ListaData[index].resta +
                                   int.parse(depositoControler.text);
-                              await timporEspera(500);
-                              listToCSV(ListaData);
+                              await sleepTime(500);
+                              listToCSV(ListaData, context);
                               depositoControler.clear();
                               Navigator.pop(context);
                             }
                           } else {
-                            var mensaje =
-                                'Debe incluir todos los campos correctamente';
-                            alertError(context, mensaje);
+                            alertError(context,
+                                'Debe incluir todos los campos correctamente');
                           }
                         },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(color: Colors.green),
-                          child: const Row(
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                "Aceptar",
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.white),
-                                textAlign: TextAlign.center,
-                              )),
-                            ],
-                          ),
+                        child: const Text(
+                          "Aceptar",
+                          style: TextStyle(fontSize: 12, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        )),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
+                        onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(color: Colors.red),
-                          child: const Row(
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                "Cancelar",
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.white),
-                                textAlign: TextAlign.center,
-                              )),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                        child: const Text(
+                          "Cancelar",
+                          style: TextStyle(fontSize: 12, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        )),
                   ],
                 )
               ],
@@ -525,8 +421,8 @@ Future<void> restaValue(context, index) async {
   );
 }
 
-Future<bool> eliminarValue(context) async {
-  var respuesta2= false;
+Future<bool> dellValue(context) async {
+  var respuesta2 = false;
   await showDialog(
     barrierDismissible: false,
     context: context,
@@ -535,85 +431,72 @@ Future<bool> eliminarValue(context) async {
           "ELIMINAR",
           textAlign: TextAlign.center,
           style: TextStyle(
-              color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
+              color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
         ),
-        content: SingleChildScrollView(
-          child: Container(
-            width: 100,
-            height: 80,
-            child: Column(
-              children: [
-                const SizedBox(height: 8),
-                const Text(
-                    'Estas seguro que deseas Eliminar',
+        content: SizedBox(
+          width: 120,
+          height: 100,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 8),
+              const Center(
+                child: Text(
+                  'Estas seguro que deseas eliminar el registro',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold
+                    fontSize: 12,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 15),
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () async{
-                          respuesta2 = true;
-                          Navigator.pop(context);
-                          await timporEspera(500);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(color: Colors.green),
-                          child: const Row(
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                    "Aceptar",
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.white),
-                                    textAlign: TextAlign.center,
-                                  )),
-                            ],
-                          ),
-                        ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(color: Colors.red),
-                          child: const Row(
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                    "Cancelar",
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.white),
-                                    textAlign: TextAlign.center,
-                                  )),
-                            ],
-                          ),
-                        ),
+                      onPressed: () async {
+                        respuesta2 = true;
+                        Navigator.pop(context);
+                        await sleepTime(500);
+                      },
+                      child: const Text(
+                        "Aceptar",
+                        style: TextStyle(fontSize: 12, color: Colors.white),
+                        textAlign: TextAlign.center,
+                      )),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
                       ),
-                    ),
-                  ],
-                )
-              ],
-            ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Cancelar",
+                        style: TextStyle(fontSize: 12, color: Colors.white),
+                        textAlign: TextAlign.center,
+                      )),
+                ],
+              )
+            ],
           ),
         )),
   );
   return respuesta2;
 }
 
-
-Future<void> timporEspera(dur) async {
+Future<void> sleepTime(dur) async {
   await Future.delayed(Duration(milliseconds: dur));
 }
 
+snackShow(msg, context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(msg),
+    ),
+  );
+}
