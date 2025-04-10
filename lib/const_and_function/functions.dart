@@ -4,11 +4,13 @@ import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:saving_control/const_and_function/widgets.dart';
-import '../pages/savings.dart' show ListaData;
+import '../pages/savings.dart' show ListaData, currencyType, type;
 import '../models/data_model.dart';
 import 'dart:io';
 
 const csvName = "data.csv";
+const csvType = "type.csv";
+TextEditingController newCurrencyType =  TextEditingController();
 
 late String csv;
 final random = Random();
@@ -105,6 +107,75 @@ Future<void> addItem(context) async {
   );
 }
 
+Future<void> currencyChanger(context) async {
+  await showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+        title: const Text(
+          "coloque su tipo de moneda",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.bold),
+        ),
+        content: SingleChildScrollView(
+          child: SizedBox(
+            width: 150,
+            height: 150,
+            child: Column(
+              children: [
+                currencyNew(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Valor actual: ', style: TextStyle(fontSize: 8),),
+                    Text(currencyType.text, style: const TextStyle(fontSize: 8, fontWeight: FontWeight.bold),),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                        ),
+                        onPressed: () {
+                          if (newCurrencyType.text.isNotEmpty && newCurrencyType.text.length <= 3 ){
+                            type['type'] = newCurrencyType.text;
+                            listToCSVType([type], context);
+                            Navigator.pop(context);
+                          }else{
+                            snackShow('Introduzca correctamente su tipo de moneda (en formato simbolo ó abreviado 3 letras)', context);
+                          }
+                        },
+                        child: const Text(
+                          "Aceptar",
+                          style: TextStyle(fontSize: 12, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        )),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                        onPressed: () {
+                          newCurrencyType.clear();
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          "Cancelar",
+                          style: TextStyle(fontSize: 12, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        )),
+                  ],
+                )
+              ],
+            ),
+          ),
+        )),
+  );
+}
+
 Future<void> alertError(BuildContext context, texto) async {
   await showDialog(
     barrierDismissible: false,
@@ -175,6 +246,51 @@ Future<void> csvRead(context) async {
     e;
   }
   //print('primer valor: ${fields.length}');
+}
+
+Future<void> listToCSVType(List<Map<String,String>> curType, context) async {
+  List<List<dynamic>> csvData = [
+    <String>['type'],
+    ...curType.map((item) => [
+      item['type'],
+    ])
+  ];
+  csv = const ListToCsvConverter().convert(csvData);
+  csv;
+  final String dir = (await getApplicationDocumentsDirectory()).path;
+  final String path = '$dir/$csvType';
+  final File file = File(path);
+  try{
+    var dataSaved = await file.writeAsString(csv);
+    dataSaved;
+    //snackShow('Data Updated', context);
+  }catch (e){
+    print(e);
+  }
+}
+
+Future<void> csvReadType(context) async {
+
+  final String dir = (await getApplicationDocumentsDirectory()).path;
+  final String path = '$dir/$csvType';
+  final input = File(path).openRead();
+  try {
+    final fields = await input
+        .transform(utf8.decoder)
+        .transform(const CsvToListConverter())
+        .toList();
+    fields;
+    for (int i = 0; i < fields.length; i++) {
+      if(i > 0){
+        print('primer valor read: ${fields[i][0].toString()}');
+        type['type'] = fields[i][0];
+        await sleepTime(250);
+      }
+    }
+  } catch (e) {
+    e;
+  }
+
 }
 
 List dateSplit(String date) {

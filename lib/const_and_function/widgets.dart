@@ -160,7 +160,7 @@ Widget dataBox(name, monto, resta, fecha, ahora, index, dif) {
                     style: TextStyle(color: ct, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    '$monto USD',
+                    '$monto ${currencyType.text}',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: ct),
                   ),
@@ -171,7 +171,7 @@ Widget dataBox(name, monto, resta, fecha, ahora, index, dif) {
                     style: TextStyle(color: ct, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    '$resta USD',
+                    '$resta ${currencyType.text}',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: ct),
                   ),
@@ -254,7 +254,7 @@ Widget dataBox(name, monto, resta, fecha, ahora, index, dif) {
                                 fontSize: 9),
                           ),
                           Text(
-                            '$montDias USD',
+                            '$montDias ${currencyType.text}',
                             textAlign: TextAlign.start,
                             style: TextStyle(color: ct, fontSize: 9),
                           ),
@@ -278,7 +278,7 @@ Widget dataBox(name, monto, resta, fecha, ahora, index, dif) {
                                 fontSize: 9),
                           ),
                           Text(
-                            "${num.parse((montDias * 7).toStringAsFixed(2))} USD",
+                            "${num.parse((montDias * 7).toStringAsFixed(2))} ${currencyType.text}",
                             textAlign: TextAlign.start,
                             style: TextStyle(color: ct, fontSize: 9),
                           ),
@@ -300,7 +300,7 @@ Widget dataBox(name, monto, resta, fecha, ahora, index, dif) {
                                 fontSize: 9),
                           ),
                           Text(
-                            "${num.parse((montDias * 30).toStringAsFixed(2))} USD",
+                            "${num.parse((montDias * 30).toStringAsFixed(2))} ${currencyType.text}",
                             textAlign: TextAlign.start,
                             style: TextStyle(color: ct, fontSize: 9),
                           ),
@@ -354,6 +354,31 @@ Widget nameW() {
         ),
         hintText: "Motivo",
         hintStyle: const TextStyle(color: Colors.black),
+        fillColor: Colors.white38,
+        filled: true,
+      ),
+      style: const TextStyle(color: Colors.black),
+    ),
+  );
+}
+
+Widget currencyNew() {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+    child: TextField(
+      controller:newCurrencyType,
+      obscureText: false,
+      decoration: InputDecoration(
+        prefixIcon: const Icon(Icons.add_card, color: Colors.black),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: const BorderSide(
+            width: 10,
+            style: BorderStyle.solid,
+          ),
+        ),
+        hintText: "ejemplo: \$ ó USD",
+        hintStyle: const TextStyle(color: Colors.black, fontSize: 10),
         fillColor: Colors.white38,
         filled: true,
       ),

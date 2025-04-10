@@ -6,9 +6,12 @@ import 'package:delayed_display/delayed_display.dart';
 
 
 late List<DataList> ListaData = [];
+Map<String, String> type = {'type': '\$'};
 bool startAnimation = true;
 double screenHeight = 0;
 double screenWidth = 0;
+TextEditingController  currencyType = TextEditingController();
+
 
 
 class Savings extends StatefulWidget {
@@ -22,6 +25,9 @@ class _SavingsState extends State<Savings> {
   @override
   void initState() {
     csvRead(context).then((value) => setState(() {}));
+    csvReadType(context).then((value) => setState(() {
+        currencyType.text = type['type'].toString();
+    }));
     super.initState();
   }
 
@@ -101,6 +107,19 @@ class _SavingsState extends State<Savings> {
 
         ),
       ),
+      floatingActionButton: IconButton(
+          onPressed: (){
+                currencyChanger(context).whenComplete((){
+                  sleepTime(1500);
+                  csvReadType(context).then((value) => setState(() {
+                    type;
+                    print(type.toString());
+                    currencyType.text = type['type'].toString();
+                    newCurrencyType.clear();
+                  }));
+                });
+          },
+          icon: Icon(Icons.price_change)),
       bottomNavigationBar: bottomDevName(),
     );
   }
